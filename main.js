@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    tablaPersonas = $("#tablaPersonas").DataTable({
+    tablaProyectos = $("#tablaProyectos").DataTable({
        "columnDefs":[{
         "targets": -1,
         "data":null,
@@ -25,10 +25,10 @@ $(document).ready(function(){
     });
     
 $("#btnNuevo").click(function(){
-    $("#formPersonas").trigger("reset");
+    $("#formProyectos").trigger("reset");
     $(".modal-header").css("background-color", "#28a745");
     $(".modal-header").css("color", "white");
-    $(".modal-title").text("Nueva Persona");            
+    $(".modal-title").text("Nuevo Proyecto");            
     $("#modalCRUD").modal("show");        
     id=null;
     opcion = 1; //alta
@@ -40,13 +40,13 @@ var fila; //capturar la fila para editar o borrar el registro
 $(document).on("click", ".btnEditar", function(){
     fila = $(this).closest("tr");
     id = parseInt(fila.find('td:eq(0)').text());
-    nombre = fila.find('td:eq(1)').text();
-    pais = fila.find('td:eq(2)').text();
-    edad = parseInt(fila.find('td:eq(3)').text());
+    unidad = fila.find('td:eq(1)').text();
+    detalle = fila.find('td:eq(2)').text();
+    prioridad = parseInt(fila.find('td:eq(3)').text());
     
-    $("#nombre").val(nombre);
-    $("#pais").val(pais);
-    $("#edad").val(edad);
+    $("#unidad").val(unidad);
+    $("#detalle").val(detalle);
+    $("#prioridad").val(prioridad);
     opcion = 2; //editar
     
     $(".modal-header").css("background-color", "#007bff");
@@ -69,30 +69,30 @@ $(document).on("click", ".btnBorrar", function(){
             dataType: "json",
             data: {opcion:opcion, id:id},
             success: function(){
-                tablaPersonas.row(fila.parents('tr')).remove().draw();
+                tablaProyectos.row(fila.parents('tr')).remove().draw();
             }
         });
     }   
 });
     
-$("#formPersonas").submit(function(e){
+$("#formProyectos").submit(function(e){
     e.preventDefault();    
-    nombre = $.trim($("#nombre").val());
-    pais = $.trim($("#pais").val());
-    edad = $.trim($("#edad").val());    
+    unidad = $.trim($("#unidad").val());
+    detalle = $.trim($("#detalle").val());
+    prioridad = $.trim($("#prioridad").val());    
     $.ajax({
         url: "bd/crud.php",
         type: "POST",
         dataType: "json",
-        data: {nombre:nombre, pais:pais, edad:edad, id:id, opcion:opcion},
+        data: {unidad:unidad, detalle:detalle, prioridad:prioridad, id:id, opcion:opcion},
         success: function(data){  
             console.log(data);
             id = data[0].id;            
-            nombre = data[0].nombre;
-            pais = data[0].pais;
-            edad = data[0].edad;
-            if(opcion == 1){tablaPersonas.row.add([id,nombre,pais,edad]).draw();}
-            else{tablaPersonas.row(fila).data([id,nombre,pais,edad]).draw();}            
+            unidad = data[0].unidad;
+            detalle = data[0].detalle;
+            prioridad = data[0].prioridad;
+            if(opcion == 1){tablaProyectos.row.add([id,unidad,detalle,prioridad]).draw();}
+            else{tablaProyectos.row(fila).data([id,unidad,detalle,prioridad]).draw();}            
         }        
     });
     $("#modalCRUD").modal("hide");    
